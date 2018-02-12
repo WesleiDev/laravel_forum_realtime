@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ThreadsRequest;
 
 class ThreadController extends Controller
 {
@@ -14,18 +16,13 @@ class ThreadController extends Controller
      */
     public function index()
     {
-        //
+        $threds = Thread::orderBy('updated_at', 'desc')
+            ->paginate();
+
+        return response()->json($threds);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -33,9 +30,20 @@ class ThreadController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ThreadsRequest $request)
     {
-        //
+        try{
+            $thread = new Thread;
+            $thread->title = $request->input('title');
+            $thread->body = $request->input('body');
+            $thread->user_id = Auth::user()->id;
+            $thread->save();
+        }catch (\Exception $e){
+            return response()->json('Erro'.$e->getMessage());
+        }
+
+
+        return response()->json(['created'=>'success']);
     }
 
     /**
@@ -57,7 +65,7 @@ class ThreadController extends Controller
      */
     public function edit(Thread $thread)
     {
-        //
+
     }
 
     /**
@@ -67,9 +75,21 @@ class ThreadController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public function update(ThreadsRequest $request,  $id)
     {
-        //
+        try{
+
+            $thread = Thread::find($id);
+            $this->authorize('update', $thread);
+            $thread->title = $request->input('title');
+            $thread->body = $request->input('body');
+            $thread->save();
+        }catch (\Exception $e){
+            return response()->json('Erro'.$e->getMessage());
+        }
+
+
+        return redirect('/threads/'.$id);
     }
 
     /**

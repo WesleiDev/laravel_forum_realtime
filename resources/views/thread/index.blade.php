@@ -6,7 +6,10 @@
     <threads threads="@lang('Threads')"
              title="@lang('Threads')"
              reply="@lang('Reply')"
-             open="@lang('open')">
+             open="@lang('open')"
+             new-thread="@lang('New Thread')"
+             thread-title="@lang('Title')"
+             thread-body="@lang('Body')">
         @include('layouts.default.preloader')
     </threads>
 </div>
