@@ -1,48 +1,23 @@
 <template>
     <div>
-    <div class="card"> 
+    <div class="card" v-for="data in replies"> 
         <div class="card-content">
-            <span class="card-title">{{title}}</span>
+            <span class="card-title">{{data.user.name}} {{replied}}</span>
         
             <blockquote>
-            Id illum nesciunt tempore aut qui libero aut. Aperiam provident eaque et repudiandae labore molestiae voluptate ut. Ad totam dolores ut enim odio perspiciatis.Hic rerum necessitatibus non ratione pariatur laboriosam et.
+            {{data.body}}
             </blockquote>
         </div>
     </div>
-    <div class="card"> 
-        <div class="card-content">
-            <span class="card-title">Erik {{replied}}</span>
-        
-            <blockquote>
-            Id illum nesciunt tempore aut qui libero aut. Aperiam provident eaque et repudiandae labore molestiae voluptate ut. Ad totam dolores ut enim odio perspiciatis.Hic rerum necessitatibus non ratione pariatur laboriosam et.
-            </blockquote>
-        </div>
-    </div>
-    <div class="card"> 
-        <div class="card-content">
-            <span class="card-title">Erik {{replied}}</span>
-        
-            <blockquote>
-            Id illum nesciunt tempore aut qui libero aut. Aperiam provident eaque et repudiandae labore molestiae voluptate ut. Ad totam dolores ut enim odio perspiciatis.Hic rerum necessitatibus non ratione pariatur laboriosam et.
-            </blockquote>
-        </div>
-    </div>
-    <div class="card"> 
-        <div class="card-content">
-            <span class="card-title">{{replied}}</span>
-        
-            <blockquote>
-            Id illum nesciunt tempore aut qui libero aut. Aperiam provident eaque et repudiandae labore molestiae voluptate ut. Ad totam dolores ut enim odio perspiciatis.Hic rerum necessitatibus non ratione pariatur laboriosam et.
-            </blockquote>
-        </div>
-    </div>
+
+
     <div class="card grey lighten-4"> 
         <div class="card-content">
             <span class="card-title">{{reply}}</span>
-            <form>
+            <form @submit.prevent="save()">
                 <div class="input-field">
                     <textarea 
-                    class="materialize-textarea" :placeholder="yourAnswer"></textarea>
+                    class="materialize-textarea" :placeholder="yourAnswer" v-model="reply_to_save.body"></textarea>
                     <button type="submit" class="btn red accent-2">{{send}}</button>
                 </div>
             </form>
@@ -58,6 +33,43 @@
             'replied',
             'reply',
             'send',
-            'yourAnswer']
+            'yourAnswer',
+            'threadId'
+            ],
+            data(){
+                return {
+                    replies:[],
+                    thread_id: this.threadId,
+                    reply_to_save:{
+                        body:"",
+                        thread_id: this.threadId
+                    }
+                }
+            },
+            methods:{
+                getReplies(){
+                    window.axios.get('/replies/'+this.thread_id)
+                    .then(
+                        (response)=>{
+                            this.replies = response.data
+                        }
+                    )
+                },
+
+                save(){
+                    window.axios.post('/replies', this.reply_to_save)
+                    .then(
+                        (response)=>{
+                            this.getReplies();
+                        }
+                    )
+
+                }
+            },
+            mounted(){
+                this.getReplies()
+            }
+
+
     }
 </script>

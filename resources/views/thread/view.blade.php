@@ -9,7 +9,7 @@
             </div>
             
             <div class="card-action">
-                @if(\Auth::user()->can('update', $result))
+                @if(\Auth::user() and \Auth::user()->can('update', $result))
                 <a href="/threads/{{$result->id}}/edit">@lang('Edit')</a>
                 @endif
                 <a href="/">@lang('Back')</a>
@@ -20,6 +20,7 @@
                  your-answer="@lang('your answer')"
                  reply="@lang('Reply')"
                  send="@lang('send')"
+                 thread-id="{{$result->id}}"
                  >
 
             @include('layouts.default.preloader')

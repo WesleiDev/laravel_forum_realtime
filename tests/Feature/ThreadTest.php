@@ -54,7 +54,11 @@ class ThreadTest extends TestCase
 
     public function testeActionsUpdateController(){
         $user = factory(\App\User::class)->create();
-        $thread = factory(\App\Thread::class)->create();
+        $thread = factory(\App\Thread::class)->create(
+            ['body'=> 'BARA BARA BAR',
+            'title'=> "TITULO",
+            'user_id'=> $user->id]
+        );
 
         //Verifica a URL passando um usuário para autenticar
         $response = $this
@@ -62,7 +66,9 @@ class ThreadTest extends TestCase
             ->json('PUT','/threads/'.$thread->id, [
                 'title'=> 'Meu primeiro tópico atualizado',
                 'body'=> 'Este é um exemplo de tópico atualizado']);
-
+//
+//        var_dump('Erro');
+//        var_dump($response);
         //Verifica o status
 
         $thread->title = "Meu primeiro tópico atualizado";

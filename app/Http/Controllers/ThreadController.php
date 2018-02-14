@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewThread;
 use App\Thread;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,7 @@ class ThreadController extends Controller
             $thread->body = $request->input('body');
             $thread->user_id = Auth::user()->id;
             $thread->save();
+            broadcast(new NewThread($thread));
         }catch (\Exception $e){
             return response()->json('Erro'.$e->getMessage());
         }
@@ -84,6 +86,8 @@ class ThreadController extends Controller
             $thread->title = $request->input('title');
             $thread->body = $request->input('body');
             $thread->save();
+
+            broadcast(new NewThread($thread));
         }catch (\Exception $e){
             return response()->json('Erro'.$e->getMessage());
         }
