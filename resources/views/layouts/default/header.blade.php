@@ -6,7 +6,7 @@
     <nav>
         <div class="nav wrapper">
             <div class="container">
-                <a href="" class="brand logo">{{__('My Hereoes - Forum')}}</a>
+                <a href="/" class="brand logo">{{__('My Hereoes - Forum')}}</a>
                 <ul class="right">
                     <li>
                         <a href="#" data-activates="locale" class="dropdown-button"

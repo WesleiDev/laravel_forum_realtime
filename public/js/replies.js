@@ -256,7 +256,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
+        var _this3 = this;
+
         this.getReplies();
+
+        Echo.channel('new.reply.' + this.thread_id).listen('NewReply', function (e) {
+            console.log(e);
+            _this3.getReplies();
+            _this3.reply_to_save.body = "";
+        });
     }
 });
 

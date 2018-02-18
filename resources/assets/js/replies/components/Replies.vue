@@ -68,6 +68,14 @@
             },
             mounted(){
                 this.getReplies()
+
+                Echo.channel('new.reply.'+this.thread_id)
+                    .listen('NewReply', (e)=>{
+                        console.log(e)
+                        this.getReplies();
+                        this.reply_to_save.body = "";
+                    
+                    });
             }
 
 

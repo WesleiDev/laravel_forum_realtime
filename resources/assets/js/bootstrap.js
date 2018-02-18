@@ -54,3 +54,47 @@ if (token) {
      cluster: 'us2',
      encrypted: true
  });
+
+ import swal from 'sweetalert';
+
+const successCallbac = (response) =>{
+    return response;
+}
+
+const errorCallback = (error) =>{
+    console.log('ERRO: ', error.response)
+    if(error.response.status === 401){
+        swal({
+            title:"Autenticacao",
+            text: "Para acessar teste recurso você precisa esta autenticado! Você será redirecionado",
+            type:"warning",
+            showCancelButton:true,
+            buttons:true
+        }).then(
+            (result)=>{
+                if(result){
+                window.location ='/login'
+                }
+        
+            }
+        )
+    }else{
+        swal({
+            title:"Erro",
+            text: "Algo deu errado e não pude resolver, me desculpe",
+            type:"error",
+            showCancelButton:true,
+            buttons:true
+        })
+    }
+    
+    return Promise.reject(error);
+}
+window.axios.interceptors.response.use(successCallbac, errorCallback)
+
+window.Vue = require('vue');
+Vue.component('loader', require('./commons/AxiosLoader.vue'));
+
+const commonApps = new Vue({
+    el:"#loader"
+})

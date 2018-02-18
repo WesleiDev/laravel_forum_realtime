@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewReply;
 use App\Http\Requests\ReplyRequest;
 use App\Reply;
 use Illuminate\Http\Request;
@@ -26,6 +27,8 @@ class ReplyController extends Controller
             $reply->thread_id = $request->input('thread_id');
             $reply->user_id = Auth::user()->id;
             $reply->save();
+
+            broadcast(new NewReply($reply));
 
         }catch(\Exception $e){
             return response()->json('Erro ao salvar registro', 500);

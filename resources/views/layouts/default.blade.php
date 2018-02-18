@@ -17,7 +17,11 @@
             @yield('content')
         </section>
     </main>
-        @include('layouts.default.footer')
+
+    <div id="loader">
+        <loader></loader>
+    </div>
+    @include('layouts.default.footer')
 
 
     @component('layouts.default.bodyscript')
