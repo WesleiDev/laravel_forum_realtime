@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\SocialAuth;
+use App\User;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -16,7 +18,41 @@ class SocialAuthController extends Controller
     public function callback($provider){
 
         $user  = Socialite::driver($provider)->user();
-        dd($user);
+
+        $account = SocialAuth::where([
+            'provider' => $provider,
+            'social_id' => $user->id,
+
+        ])->first();
+
+
+        if($account){
+            auth()->login($account->user);
+            return redirect('/');
+        }
+
+        $localUser = User::where('email', $user->email)->first();
+
+        if($localUser){
+            auth()->login($localUser);
+            return redirect('/');
+        }
+
+        $newUser = new User();
+        $newUser->name = $user->name;
+        $newUser->email = $user->email;
+        $newUser->password = bcrypt('secret');
+        $newUser->save();
+
+        $account = new SocialAuth();
+        $account->provider = 'provider';
+        $account->social_id = $user->id;
+        $account->user_id = $newUser->id;
+        $account->save();
+
+        auth()->login($newUser);
+        return redirect('/');
+
 
     }
 }

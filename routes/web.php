@@ -42,9 +42,13 @@ Route::middleware(['auth'])
 
 
         Route::post('/replies', 'ReplyController@store');
+        Route::get('/profile', 'ProfileController@edit');
+        Route::post('/update', 'ProfileController@update');
 
     });
 
 Auth::routes();
+
+Route::get('/teste', ['uses' => 'ThreadController@testeGcs']);
 
 Route::get('/home', 'HomeController@index')->name('home');

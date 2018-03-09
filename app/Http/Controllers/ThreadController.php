@@ -7,6 +7,7 @@ use App\Thread;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ThreadsRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ThreadController extends Controller
 {
@@ -96,14 +97,11 @@ class ThreadController extends Controller
         return redirect('/threads/'.$id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Thread  $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Thread $thread)
-    {
-        //
+    public function testeGcs(Request $request){
+//        $file = $request->file('photo');
+        $arq = Storage::disk('gcs')->put('/testes','teste.txt');
+        dd($arq);
+        return "OLA MUNDO";
+
     }
 }
